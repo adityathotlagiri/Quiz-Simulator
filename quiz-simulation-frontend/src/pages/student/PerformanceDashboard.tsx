@@ -169,7 +169,8 @@ export default function PerformanceDashboard() {
               <YAxis tick={{ fontSize: 12, fill: "#94A3B8" }} axisLine={{ stroke: "#E2E8F0" }} domain={[0, 100]} />
               <Tooltip
                 contentStyle={{ borderRadius: 12, border: "1px solid #E2E8F0", fontSize: 13 }}
-                formatter={(value: number) => [`${value.toFixed(1)}%`, "Score"]}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                formatter={(value: any) => [`${value.toFixed(1)}%`, "Score"]}
               />
               <Line
                 type="monotone"
