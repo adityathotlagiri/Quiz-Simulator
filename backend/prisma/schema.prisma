@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+enum AssessmentMode {
+  practice
+  exam
+}
+enum QuizStatus {
+  draft
+  published
+}
+
+enum QuestionType {
+  mcq
+  multi_select
+  true_false
+}
+
+enum AttemptMode {
+  practice
+  exam
+}
+
+enum AttemptStatus {
+  in_progress
+  submitted
+  auto_submitted
+}
+
+model Quiz {
+  id                 String     @id @default(uuid())
+  title              String
+  description        String?
+  instructions        String?
+  durationMinutes    Int
+  totalMarks         Int
+  passingPercentage  Int
+  status             QuizStatus @default(draft)
+  createdBy          String
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  questions          Question[]
+  practiceConfig     PracticeConfig?
+  examConfig         ExamConfig?
+  attempts           Attempt[]
+  assessmentMode     AssessmentMode @default(practice)
+  randomizeQuestions Boolean @default(false)
+}
+
+model Question {
+  id           String       @id @default(uuid())
+  quizId       String
+  quiz         Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  questionText String
+  type         QuestionType
+  marks        Int
+  orderIndex   Int
+  explanation  String?
+
+  options      Option[]
+  responses    Response[]
+}
+
+model Option {
+  id          String   @id @default(uuid())
+  questionId  String
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  optionText  String
+  isCorrect   Boolean  @default(false)
+}
+
+model PracticeConfig {
+  id               String  @id @default(uuid())
+  quizId           String  @unique
+  quiz             Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  allowedAttempts  Int?
+  hasTimer         Boolean @default(false)
+  durationMinutes  Int?
+  isActive         Boolean @default(true)
+}
+
+model ExamConfig {
+  id               String   @id @default(uuid())
+  quizId           String   @unique
+  quiz             Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  scheduledStart   DateTime
+  scheduledEnd     DateTime
+  durationMinutes  Int
+  isActive         Boolean  @default(true)
+}
+
+model Attempt {
+  id             String        @id @default(uuid())
+  quizId         String
+  quiz           Quiz          @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  studentId      String
+  mode           AttemptMode
+  attemptNumber  Int
+  status         AttemptStatus @default(in_progress)
+  startedAt      DateTime      @default(now())
+  submittedAt    DateTime?
+
+  responses      Response[]
+  result         Result?
+}
+
+model Response {
+  id                String   @id @default(uuid())
+  attemptId         String
+  attempt           Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId        String
+  question          Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedOptionIds String[]
+  isCorrect         Boolean?
+  marksObtained     Int?
+}
+
+model Result {
+  id             String   @id @default(uuid())
+  attemptId      String   @unique
+  attempt        Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  totalMarks     Int
+  obtainedMarks  Int
+  percentage     Float
+  passFail       Boolean
+  createdAt      DateTime @default(now())
+}
