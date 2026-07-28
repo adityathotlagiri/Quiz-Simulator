@@ -20,6 +20,7 @@ export default function QuizManagement() {
       const res = await axiosClient.get(`/teacher/quizzes?createdBy=${TEACHER_ID}`);
       setQuizzes(res.data.data);
     } catch (err) {
+      console.error("Quiz loading error details:", err);
       toast.error("Failed to load quizzes");
     } finally {
       setLoading(false);
@@ -38,6 +39,7 @@ export default function QuizManagement() {
       toast.success("Quiz deleted");
       fetchQuizzes();
     } catch (err) {
+      console.error("Quiz loading error details:", err);
       toast.error("Failed to delete quiz");
     }
   };

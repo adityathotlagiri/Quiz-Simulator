@@ -5,7 +5,6 @@ import axiosClient from "../../api/axiosClient";
 import toast from "react-hot-toast";
 import type { Quiz } from "../../types/quiz";
 import { useNavigate } from "react-router-dom";
-import ChatWidget from "../../components/chat/ChatWidget";
 // const STUDENT_ID = "student-uuid-placeholder"; // will come from auth later
 
 type Tab = "practice" | "exam";
@@ -22,6 +21,7 @@ export default function StudentQuizList() {
       const filtered = res.data.data.filter((q: any) => q.assessmentMode === tab);
       setQuizzes(filtered);
     } catch (err) {
+      console.error("Quiz loading error details:", err);
       toast.error("Failed to load quizzes");
     } finally {
       setLoading(false);

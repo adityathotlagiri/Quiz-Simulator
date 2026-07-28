@@ -96,6 +96,7 @@ export default function QuizFormModal({ isOpen, onClose, onSaved, editingQuiz }:
         onSaved();
         onClose();
       } catch (err) {
+        console.error("Quiz loading error details:", err);
         toast.error("Failed to save quiz");
       }
     };

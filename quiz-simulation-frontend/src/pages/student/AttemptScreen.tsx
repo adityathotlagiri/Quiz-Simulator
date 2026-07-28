@@ -50,6 +50,7 @@ export default function AttemptScreen() {
         toast.error("Time's up — your assessment was submitted automatically");
         navigate(`/student/result/${attemptId}`);
       } catch (err) {
+        console.error("Quiz loading error details:", err);
         toast.error("Auto-submit failed");
         setIsSubmitting(false);
       }
@@ -88,6 +89,7 @@ export default function AttemptScreen() {
       setAnswers(JSON.parse(saved));
     }
   } catch (err) {
+    console.error("Quiz loading error details:", err);
     toast.error("Failed to load attempt");
   } finally {
     setLoading(false);
@@ -137,6 +139,7 @@ export default function AttemptScreen() {
       toast.success("Submitted!");
       navigate(`/student/result/${attemptId}`);
     } catch (err) {
+      console.error("Quiz loading error details:", err);
       toast.error("Failed to submit");
       setIsSubmitting(false);
     }
