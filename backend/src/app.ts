@@ -7,6 +7,7 @@ import teacherConfigRoutes from "./routes/teacher/configRoutes";
 import studentQuizRoutes from "./routes/quizRoutes";
 import studentAttemptRoutes from "./routes/attemptRoutes";
 import studentPerformanceRoutes from "./routes/performanceRoutes";
+import chatRoutes from "./routes/chatRoutes";
 
 const app = express();
 
@@ -25,5 +26,5 @@ app.use("/teacher/config", teacherConfigRoutes);
 app.use("/student/quizzes", studentQuizRoutes);
 app.use("/student/attempts", studentAttemptRoutes);
 app.use("/student/performance", studentPerformanceRoutes);
-
+app.use("/chat", chatRoutes);
 export default app;
