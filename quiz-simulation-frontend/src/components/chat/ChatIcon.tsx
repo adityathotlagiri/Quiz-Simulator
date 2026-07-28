@@ -14,7 +14,7 @@ export default function ChatIcon({ unreadCount, onClick }: ChatIconProps) {
 
       <button
         onClick={onClick}
-        className="w-14 h-14 rounded-full bg-indigo-500 text-white 
+        className="w-14 h-14 rounded-full bg-indigo-500  text-white 
                    shadow-lg flex items-center justify-center hover:scale-105 
                    transition-transform duration-200"
         aria-label="Open AI Tutor Chat"
