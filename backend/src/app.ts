@@ -27,4 +27,7 @@ app.use("/student/quizzes", studentQuizRoutes);
 app.use("/student/attempts", studentAttemptRoutes);
 app.use("/student/performance", studentPerformanceRoutes);
 app.use("/chat", chatRoutes);
+app.use(cors({
+  origin: "https://quiz-simulator-u5e7-4620lozja-adityathotlagiri-8938s-projects.vercel.app/",
+}));
 export default app;

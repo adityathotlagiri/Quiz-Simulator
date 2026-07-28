@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import ChatIcon from './ChatIcon';
 import ChatWindow from './ChatWindow';
 import type { ChatMessage } from '../../types/chat';
+import axiosClient from '../../api/axiosClient';
 
 const STUDENT_NAME = 'Aditya'; // replace with real logged-in student name later
 
@@ -45,33 +46,21 @@ export default function ChatWidget() {
   setMessages((prev) => [...prev, userMsg]);
   setIsLoading(true);
 
-  try {
-    const response = await fetch('/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Something went wrong');
+    try {
+      const response = await axiosClient.post('/chat', { message: text });
+      const aiMsg = makeMessage('ai', response.data.reply);
+      setMessages((prev) => [...prev, aiMsg]);
+    } catch (err) {
+      const errorMsg = makeMessage(
+        'ai',
+        "Sorry, I'm having trouble connecting right now. Please try again in a moment."
+      );
+      setMessages((prev) => [...prev, errorMsg]);
+      console.error('Chat error:', err);
+    } finally {
+      setIsLoading(false);
     }
-
-    const aiMsg = makeMessage('ai', data.reply);
-    setMessages((prev) => [...prev, aiMsg]);
-  } catch (err) {
-    const errorMsg = makeMessage(
-      'ai',
-      "Sorry, I'm having trouble connecting right now. Please try again in a moment."
-    );
-    setMessages((prev) => [...prev, errorMsg]);
-    console.error('Chat error:', err);
-  } finally {
-    setIsLoading(false);
-  }
-};
-  
+  };
 
   return (
     <>
