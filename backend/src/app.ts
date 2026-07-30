@@ -10,7 +10,10 @@ import studentPerformanceRoutes from "./routes/performanceRoutes";
 import chatRoutes from "./routes/chatRoutes";
 
 const app = express();
-
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://quiz-simulator-u5e7-4620lozja-adityathotlagiri-8938s-projects.vercel.app/",
+];
 app.use(cors());
 app.use(express.json());
 
@@ -27,7 +30,17 @@ app.use("/student/quizzes", studentQuizRoutes);
 app.use("/student/attempts", studentAttemptRoutes);
 app.use("/student/performance", studentPerformanceRoutes);
 app.use("/chat", chatRoutes);
-app.use(cors({
-  origin: "https://quiz-simulator-u5e7-4620lozja-adityathotlagiri-8938s-projects.vercel.app/",
-}));
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 export default app;
