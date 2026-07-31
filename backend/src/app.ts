@@ -12,7 +12,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://quiz-simulator-u5e7-4620lozja-adityathotlagiri-8938s-projects.vercel.app",
-  "https://student-dashboard-llls-navy.vercel.app/",
+  "https://student-dashboard-llls-navy.vercel.app",
 ];
 
 app.use(
